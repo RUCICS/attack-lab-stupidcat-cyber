@@ -203,67 +203,67 @@ Disassembly of section .text:
   401258:	f3 0f 1e fa          	endbr64
   40125c:	55                   	push   %rbp
   40125d:	48 89 e5             	mov    %rsp,%rbp
-  401260:	48 81 ec 20 01 00 00 	sub    $0x120,%rsp
-  401267:	89 bd ec fe ff ff    	mov    %edi,-0x114(%rbp)
-  40126d:	48 89 b5 e0 fe ff ff 	mov    %rsi,-0x120(%rbp)
-  401274:	bf 14 20 40 00       	mov    $0x402014,%edi
-  401279:	e8 42 fe ff ff       	call   4010c0 <puts@plt>
-  40127e:	83 bd ec fe ff ff 02 	cmpl   $0x2,-0x114(%rbp)
-  401285:	74 2d                	je     4012b4 <main+0x5c>
-  401287:	48 8b 85 e0 fe ff ff 	mov    -0x120(%rbp),%rax
-  40128e:	48 8b 10             	mov    (%rax),%rdx
-  401291:	48 8b 05 c8 2d 00 00 	mov    0x2dc8(%rip),%rax        # 404060 <stderr@GLIBC_2.2.5>
-  401298:	be 25 20 40 00       	mov    $0x402025,%esi
-  40129d:	48 89 c7             	mov    %rax,%rdi
-  4012a0:	b8 00 00 00 00       	mov    $0x0,%eax
-  4012a5:	e8 46 fe ff ff       	call   4010f0 <fprintf@plt>
-  4012aa:	b8 01 00 00 00       	mov    $0x1,%eax
-  4012af:	e9 bd 00 00 00       	jmp    401371 <main+0x119>
-  4012b4:	48 8b 85 e0 fe ff ff 	mov    -0x120(%rbp),%rax
-  4012bb:	48 83 c0 08          	add    $0x8,%rax
-  4012bf:	48 8b 00             	mov    (%rax),%rax
-  4012c2:	be 37 20 40 00       	mov    $0x402037,%esi
+  401260:	48 81 ec 20 01 00 00 	sub    $0x120,%rsp # 腾位置
+  401267:	89 bd ec fe ff ff    	mov    %edi,-0x114(%rbp) # 第一个参数放栈顶第二个
+  40126d:	48 89 b5 e0 fe ff ff 	mov    %rsi,-0x120(%rbp) # 第二个参数放栈顶
+  401274:	bf 14 20 40 00       	mov    $0x402014,%edi # 神秘局部变量edi
+  401279:	e8 42 fe ff ff       	call   4010c0 <puts@plt> # call put
+  40127e:	83 bd ec fe ff ff 02 	cmpl   $0x2,-0x114(%rbp) # 将第一个参数与2比较
+  401285:	74 2d                	je     4012b4 <main+0x5c> # 等于就跳转
+  401287:	48 8b 85 e0 fe ff ff 	mov    -0x120(%rbp),%rax # 不等于 -> rax = 参数2
+  40128e:	48 8b 10             	mov    (%rax),%rdx # 参数2是一个指针，rdx现在存了其所指内容，8B
+  401291:	48 8b 05 c8 2d 00 00 	mov    0x2dc8(%rip),%rax        # 404060 <stderr@GLIBC_2.2.5> 将一个神秘内容赋给rax，待查看
+  401298:	be 25 20 40 00       	mov    $0x402025,%esi # 神秘局部变量esi
+  40129d:	48 89 c7             	mov    %rax,%rdi # rdi = rax
+  4012a0:	b8 00 00 00 00       	mov    $0x0,%eax # eax = 0
+  4012a5:	e8 46 fe ff ff       	call   4010f0 <fprintf@plt> # call fprintf, 参数一是# 404060 <stderr@GLIBC_2.2.5>，参数2是0x402025，应当是把一个字符串打印给起始地址为0x402025的字符数组
+  4012aa:	b8 01 00 00 00       	mov    $0x1,%eax # eax = 1
+  4012af:	e9 bd 00 00 00       	jmp    401371 <main+0x119> # return 1 异常退出
+  4012b4:	48 8b 85 e0 fe ff ff 	mov    -0x120(%rbp),%rax # if 第一个参数 == 2->rax = 参数2
+  4012bb:	48 83 c0 08          	add    $0x8,%rax # rax += 8 地址+8，往后移1B
+  4012bf:	48 8b 00             	mov    (%rax),%rax # rax = *(参数2 + 1) 参数2[1] 长度为8B
+  4012c2:	be 37 20 40 00       	mov    $0x402037,%esi 
   4012c7:	48 89 c7             	mov    %rax,%rdi
-  4012ca:	e8 31 fe ff ff       	call   401100 <fopen@plt>
-  4012cf:	48 89 45 f8          	mov    %rax,-0x8(%rbp)
-  4012d3:	48 83 7d f8 00       	cmpq   $0x0,-0x8(%rbp)
-  4012d8:	75 14                	jne    4012ee <main+0x96>
-  4012da:	bf 39 20 40 00       	mov    $0x402039,%edi
-  4012df:	e8 2c fe ff ff       	call   401110 <perror@plt>
-  4012e4:	b8 01 00 00 00       	mov    $0x1,%eax
-  4012e9:	e9 83 00 00 00       	jmp    401371 <main+0x119>
-  4012ee:	48 8b 55 f8          	mov    -0x8(%rbp),%rdx
-  4012f2:	48 8d 85 f0 fe ff ff 	lea    -0x110(%rbp),%rax
-  4012f9:	48 89 d1             	mov    %rdx,%rcx
-  4012fc:	ba 00 01 00 00       	mov    $0x100,%edx
-  401301:	be 01 00 00 00       	mov    $0x1,%esi
-  401306:	48 89 c7             	mov    %rax,%rdi
-  401309:	e8 c2 fd ff ff       	call   4010d0 <fread@plt>
-  40130e:	48 89 45 f0          	mov    %rax,-0x10(%rbp)
-  401312:	48 83 7d f0 00       	cmpq   $0x0,-0x10(%rbp)
-  401317:	75 1d                	jne    401336 <main+0xde>
+  4012ca:	e8 31 fe ff ff       	call   401100 <fopen@plt> # call fopen, 参数1是main函数第二个参数的第2-9字节内容，参数2是0x402037，一个地址
+  4012cf:	48 89 45 f8          	mov    %rax,-0x8(%rbp) # 帧底第一个存返回值
+  4012d3:	48 83 7d f8 00       	cmpq   $0x0,-0x8(%rbp) # 将返回值与0比较
+  4012d8:	75 14                	jne    4012ee <main+0x96> # 返回值 ！= 0 jmp
+  4012da:	bf 39 20 40 00       	mov    $0x402039,%edi # edi
+  4012df:	e8 2c fe ff ff       	call   401110 <perror@plt> # call perror, 参数为0x402039
+  4012e4:	b8 01 00 00 00       	mov    $0x1,%eax # eax = 1
+  4012e9:	e9 83 00 00 00       	jmp    401371 <main+0x119> # return 1 异常退出
+  4012ee:	48 8b 55 f8          	mov    -0x8(%rbp),%rdx # 返回值 ！= 0 jmp here -> rdx = fopen函数的返回值
+  4012f2:	48 8d 85 f0 fe ff ff 	lea    -0x110(%rbp),%rax # rax = 一个栈上的地址
+  4012f9:	48 89 d1             	mov    %rdx,%rcx # rcx = rdx = fopen函数的返回值
+  4012fc:	ba 00 01 00 00       	mov    $0x100,%edx # edx = 0x100
+  401301:	be 01 00 00 00       	mov    $0x1,%esi # esi = 1
+  401306:	48 89 c7             	mov    %rax,%rdi # rdi = 一个栈上的地址
+  401309:	e8 c2 fd ff ff       	call   4010d0 <fread@plt> # call fread, 参数1为栈上地址，参数2为1，参数3为0x100, 参数4为fopen函数的返回值
+  40130e:	48 89 45 f0          	mov    %rax,-0x10(%rbp) # 将返回值rax 存储在 -0x10(%rbp)
+  401312:	48 83 7d f0 00       	cmpq   $0x0,-0x10(%rbp) # 将返回值与0比较
+  401317:	75 1d                	jne    401336 <main+0xde> # ret val != 0 -> jmp
   401319:	bf 3f 20 40 00       	mov    $0x40203f,%edi
   40131e:	e8 ed fd ff ff       	call   401110 <perror@plt>
   401323:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
   401327:	48 89 c7             	mov    %rax,%rdi
   40132a:	e8 b1 fd ff ff       	call   4010e0 <fclose@plt>
   40132f:	b8 01 00 00 00       	mov    $0x1,%eax
-  401334:	eb 3b                	jmp    401371 <main+0x119>
-  401336:	48 8d 95 f0 fe ff ff 	lea    -0x110(%rbp),%rdx
-  40133d:	48 8b 45 f0          	mov    -0x10(%rbp),%rax
-  401341:	48 01 d0             	add    %rdx,%rax
-  401344:	c6 00 00             	movb   $0x0,(%rax)
-  401347:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
-  40134b:	48 89 c7             	mov    %rax,%rdi
-  40134e:	e8 8d fd ff ff       	call   4010e0 <fclose@plt>
-  401353:	48 8d 85 f0 fe ff ff 	lea    -0x110(%rbp),%rax
-  40135a:	48 89 c7             	mov    %rax,%rdi
-  40135d:	e8 d0 fe ff ff       	call   401232 <func>
-  401362:	bf 45 20 40 00       	mov    $0x402045,%edi
-  401367:	e8 54 fd ff ff       	call   4010c0 <puts@plt>
+  401334:	eb 3b                	jmp    401371 <main+0x119> # ret val != 0 -> return 1 异常退出
+  401336:	48 8d 95 f0 fe ff ff 	lea    -0x110(%rbp),%rdx # ret val != 0 -> jmp here -> rdx = 之前的栈上地址
+  40133d:	48 8b 45 f0          	mov    -0x10(%rbp),%rax # rax = fread返回值
+  401341:	48 01 d0             	add    %rdx,%rax # rax += 栈上地址 得到一个新的栈上地址
+  401344:	c6 00 00             	movb   $0x0,(%rax) # 在这个新的地址上放置0 1B
+  401347:	48 8b 45 f8          	mov    -0x8(%rbp),%rax # rax = 之前fopen函数的返回值
+  40134b:	48 89 c7             	mov    %rax,%rdi # rdi = rax
+  40134e:	e8 8d fd ff ff       	call   4010e0 <fclose@plt> # call fclose 参数为fopen函数的返回值 应该是一个文件指针
+  401353:	48 8d 85 f0 fe ff ff 	lea    -0x110(%rbp),%rax # rax = 之前用过的栈上地址，现在应该存着东西
+  40135a:	48 89 c7             	mov    %rax,%rdi # rdi为这个地址
+  40135d:	e8 d0 fe ff ff       	call   401232 <func> # 猜测参数为一个字符串
+  401362:	bf 45 20 40 00       	mov    $0x402045,%edi 
+  401367:	e8 54 fd ff ff       	call   4010c0 <puts@plt> # 参数为神秘局部变量0x402045，感觉是打印了这里的一个字符串
   40136c:	b8 00 00 00 00       	mov    $0x0,%eax
   401371:	c9                   	leave
-  401372:	c3                   	ret
+  401372:	c3                   	ret # return 0 正常退出
 
 Disassembly of section .fini:
 
