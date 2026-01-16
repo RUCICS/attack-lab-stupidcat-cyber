@@ -204,19 +204,19 @@ Disassembly of section .text:
   40125c:	55                   	push   %rbp
   40125d:	48 89 e5             	mov    %rsp,%rbp
   401260:	48 81 ec 20 01 00 00 	sub    $0x120,%rsp # 腾位置
-  401267:	89 bd ec fe ff ff    	mov    %edi,-0x114(%rbp) # 第一个参数放栈顶第二个
-  40126d:	48 89 b5 e0 fe ff ff 	mov    %rsi,-0x120(%rbp) # 第二个参数放栈顶
-  401274:	bf 14 20 40 00       	mov    $0x402014,%edi # 神秘局部变量edi
-  401279:	e8 42 fe ff ff       	call   4010c0 <puts@plt> # call put
+  401267:	89 bd ec fe ff ff    	mov    %edi,-0x114(%rbp) # 第一个参数放栈顶第二个/ argc = 2（参数个数）
+  40126d:	48 89 b5 e0 fe ff ff 	mov    %rsi,-0x120(%rbp) # 第二个参数放栈顶/ argv argv[0] = "./problem1"（程序名）argv[1] = "ans1.txt"（文件名）
+  401274:	bf 14 20 40 00       	mov    $0x402014,%edi # 神秘局部变量edi 存放了 "Do you like ICS?"
+  401279:	e8 42 fe ff ff       	call   4010c0 <puts@plt> # call put 输出"Do you like ICS?"
   40127e:	83 bd ec fe ff ff 02 	cmpl   $0x2,-0x114(%rbp) # 将第一个参数与2比较
   401285:	74 2d                	je     4012b4 <main+0x5c> # 等于就跳转
   401287:	48 8b 85 e0 fe ff ff 	mov    -0x120(%rbp),%rax # 不等于 -> rax = 参数2
   40128e:	48 8b 10             	mov    (%rax),%rdx # 参数2是一个指针，rdx现在存了其所指内容，8B
   401291:	48 8b 05 c8 2d 00 00 	mov    0x2dc8(%rip),%rax        # 404060 <stderr@GLIBC_2.2.5> 将一个神秘内容赋给rax，待查看
-  401298:	be 25 20 40 00       	mov    $0x402025,%esi # 神秘局部变量esi
+  401298:	be 25 20 40 00       	mov    $0x402025,%esi # 神秘局部变量esi : "Usage: %s <file>\n"
   40129d:	48 89 c7             	mov    %rax,%rdi # rdi = rax
   4012a0:	b8 00 00 00 00       	mov    $0x0,%eax # eax = 0
-  4012a5:	e8 46 fe ff ff       	call   4010f0 <fprintf@plt> # call fprintf, 参数一是# 404060 <stderr@GLIBC_2.2.5>，参数2是0x402025，应当是把一个字符串打印给起始地址为0x402025的字符数组
+  4012a5:	e8 46 fe ff ff       	call   4010f0 <fprintf@plt> # call fprintf, 参数一是# 404060 <stderr@GLIBC_2.2.5>，参数2是0x402025 "Usage: %s <file>\n" 输出使用了problem1
   4012aa:	b8 01 00 00 00       	mov    $0x1,%eax # eax = 1
   4012af:	e9 bd 00 00 00       	jmp    401371 <main+0x119> # return 1 异常退出
   4012b4:	48 8b 85 e0 fe ff ff 	mov    -0x120(%rbp),%rax # if 第一个参数 == 2->rax = 参数2

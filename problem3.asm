@@ -181,7 +181,7 @@ Disassembly of section .text:
   40121b:	48 89 e5             	mov    %rsp,%rbp
   40121e:	48 83 ec 50          	sub    $0x50,%rsp
   401222:	89 7d bc             	mov    %edi,-0x44(%rbp)
-  401225:	83 7d bc 72          	cmpl   $0x72,-0x44(%rbp)
+  401225:	83 7d bc 72          	cmpl   $0x72,-0x44(%rbp) # 0x72 = 114
   401229:	75 57                	jne    401282 <func1+0x6c>
   40122b:	48 b8 59 6f 75 72 20 	movabs $0x63756c2072756f59,%rax
   401232:	6c 75 63 
@@ -224,7 +224,7 @@ Disassembly of section .text:
   4012d0:	bf 00 00 00 00       	mov    $0x0,%edi
   4012d5:	e8 46 fe ff ff       	call   401120 <exit@plt>
 
-00000000004012da <mov_rdi>:
+00000000004012da <mov_rdi>: # 将rax赋给rdi
   4012da:	f3 0f 1e fa          	endbr64
   4012de:	55                   	push   %rbp
   4012df:	48 89 e5             	mov    %rsp,%rbp
@@ -236,7 +236,7 @@ Disassembly of section .text:
   4012ef:	5d                   	pop    %rbp
   4012f0:	c3                   	ret
 
-00000000004012f1 <mov_rax>:
+00000000004012f1 <mov_rax>: # 将rdi赋给rax
   4012f1:	f3 0f 1e fa          	endbr64
   4012f5:	55                   	push   %rbp
   4012f6:	48 89 e5             	mov    %rsp,%rbp
@@ -248,25 +248,25 @@ Disassembly of section .text:
   401306:	5d                   	pop    %rbp
   401307:	c3                   	ret
 
-0000000000401308 <call_rax>:
+0000000000401308 <call_rax>: # call rdi
   401308:	f3 0f 1e fa          	endbr64
   40130c:	55                   	push   %rbp
   40130d:	48 89 e5             	mov    %rsp,%rbp
   401310:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
   401314:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
-  401318:	ff d0                	call   *%rax
+  401318:	ff d0                	call   *%rax # 跳转到 rax 寄存器中存储的地址去执行，并将返回地址压栈
   40131a:	c3                   	ret
   40131b:	90                   	nop
   40131c:	5d                   	pop    %rbp
   40131d:	c3                   	ret
 
-000000000040131e <jmp_x>:
+000000000040131e <jmp_x>: # 跳到rdi所指向的位置
   40131e:	f3 0f 1e fa          	endbr64
   401322:	55                   	push   %rbp
   401323:	48 89 e5             	mov    %rsp,%rbp
   401326:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
   40132a:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
-  40132e:	ff e0                	jmp    *%rax
+  40132e:	ff e0                	jmp    *%rax 
   401330:	c3                   	ret
   401331:	90                   	nop
   401332:	5d                   	pop    %rbp
@@ -276,11 +276,11 @@ Disassembly of section .text:
   401334:	f3 0f 1e fa          	endbr64
   401338:	55                   	push   %rbp
   401339:	48 89 e5             	mov    %rsp,%rbp
-  40133c:	48 8b 05 cd 21 00 00 	mov    0x21cd(%rip),%rax        # 403510 <saved_rsp>
-  401343:	48 89 45 f8          	mov    %rax,-0x8(%rbp)
-  401347:	48 83 45 f8 10       	addq   $0x10,-0x8(%rbp)
-  40134c:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
-  401350:	ff e0                	jmp    *%rax
+  40133c:	48 8b 05 cd 21 00 00 	mov    0x21cd(%rip),%rax        # 403510 <saved_rsp> 取出栈顶指针
+  401343:	48 89 45 f8          	mov    %rax,-0x8(%rbp) # 
+  401347:	48 83 45 f8 10       	addq   $0x10,-0x8(%rbp) # 得到栈顶+16，即为dest起点
+  40134c:	48 8b 45 f8          	mov    -0x8(%rbp),%rax # 取出栈顶+16处的内容 8B
+  401350:	ff e0                	jmp    *%rax # 将这个8B字符串当作地址，跳过去
   401352:	90                   	nop
   401353:	5d                   	pop    %rbp
   401354:	c3                   	ret
@@ -298,11 +298,11 @@ Disassembly of section .text:
   401377:	ba 40 00 00 00       	mov    $0x40,%edx
   40137c:	48 89 ce             	mov    %rcx,%rsi
   40137f:	48 89 c7             	mov    %rax,%rdi
-  401382:	e8 69 fd ff ff       	call   4010f0 <memcpy@plt>
-  401387:	48 8d 05 7a 0c 00 00 	lea    0xc7a(%rip),%rax        # 402008 <_IO_stdin_used+0x8>
+  401382:	e8 69 fd ff ff       	call   4010f0 <memcpy@plt> # 注入点
+  401387:	48 8d 05 7a 0c 00 00 	lea    0xc7a(%rip),%rax        # 402008 <_IO_stdin_used+0x8> "Now, say your lucky number is 114!"
   40138e:	48 89 c7             	mov    %rax,%rdi
   401391:	e8 1a fd ff ff       	call   4010b0 <puts@plt>
-  401396:	48 8d 05 93 0c 00 00 	lea    0xc93(%rip),%rax        # 402030 <_IO_stdin_used+0x30>
+  401396:	48 8d 05 93 0c 00 00 	lea    0xc93(%rip),%rax        # 402030 <_IO_stdin_used+0x30> "If you do that, I will give you great scores!"
   40139d:	48 89 c7             	mov    %rax,%rdi
   4013a0:	e8 0b fd ff ff       	call   4010b0 <puts@plt>
   4013a5:	90                   	nop
@@ -316,7 +316,7 @@ Disassembly of section .text:
   4013b0:	48 81 ec 20 01 00 00 	sub    $0x120,%rsp
   4013b7:	89 bd ec fe ff ff    	mov    %edi,-0x114(%rbp)
   4013bd:	48 89 b5 e0 fe ff ff 	mov    %rsi,-0x120(%rbp)
-  4013c4:	48 8d 05 93 0c 00 00 	lea    0xc93(%rip),%rax        # 40205e <_IO_stdin_used+0x5e>
+  4013c4:	48 8d 05 93 0c 00 00 	lea    0xc93(%rip),%rax        # 40205e <_IO_stdin_used+0x5e> "Do you like ICS?"
   4013cb:	48 89 c7             	mov    %rax,%rdi
   4013ce:	e8 dd fc ff ff       	call   4010b0 <puts@plt>
   4013d3:	83 bd ec fe ff ff 02 	cmpl   $0x2,-0x114(%rbp)
@@ -324,29 +324,29 @@ Disassembly of section .text:
   4013dc:	48 8b 85 e0 fe ff ff 	mov    -0x120(%rbp),%rax
   4013e3:	48 8b 10             	mov    (%rax),%rdx
   4013e6:	48 8b 05 13 21 00 00 	mov    0x2113(%rip),%rax        # 403500 <stderr@GLIBC_2.2.5>
-  4013ed:	48 8d 0d 7b 0c 00 00 	lea    0xc7b(%rip),%rcx        # 40206f <_IO_stdin_used+0x6f>
+  4013ed:	48 8d 0d 7b 0c 00 00 	lea    0xc7b(%rip),%rcx        # 40206f <_IO_stdin_used+0x6f>  "Usage: %s <file>\n"
   4013f4:	48 89 ce             	mov    %rcx,%rsi
   4013f7:	48 89 c7             	mov    %rax,%rdi
   4013fa:	b8 00 00 00 00       	mov    $0x0,%eax
   4013ff:	e8 dc fc ff ff       	call   4010e0 <fprintf@plt>
   401404:	b8 01 00 00 00       	mov    $0x1,%eax
   401409:	e9 d1 00 00 00       	jmp    4014df <main+0x137>
-  40140e:	48 8b 85 e0 fe ff ff 	mov    -0x120(%rbp),%rax
+  40140e:	48 8b 85 e0 fe ff ff 	mov    -0x120(%rbp),%rax # 跳转至此
   401415:	48 83 c0 08          	add    $0x8,%rax
   401419:	48 8b 00             	mov    (%rax),%rax
-  40141c:	48 8d 15 5e 0c 00 00 	lea    0xc5e(%rip),%rdx        # 402081 <_IO_stdin_used+0x81>
+  40141c:	48 8d 15 5e 0c 00 00 	lea    0xc5e(%rip),%rdx        # 402081 <_IO_stdin_used+0x81> "r"
   401423:	48 89 d6             	mov    %rdx,%rsi
   401426:	48 89 c7             	mov    %rax,%rdi
   401429:	e8 d2 fc ff ff       	call   401100 <fopen@plt>
   40142e:	48 89 45 f8          	mov    %rax,-0x8(%rbp)
   401432:	48 83 7d f8 00       	cmpq   $0x0,-0x8(%rbp)
   401437:	75 19                	jne    401452 <main+0xaa>
-  401439:	48 8d 05 43 0c 00 00 	lea    0xc43(%rip),%rax        # 402083 <_IO_stdin_used+0x83>
+  401439:	48 8d 05 43 0c 00 00 	lea    0xc43(%rip),%rax        # 402083 <_IO_stdin_used+0x83> "fopen"
   401440:	48 89 c7             	mov    %rax,%rdi
   401443:	e8 c8 fc ff ff       	call   401110 <perror@plt>
   401448:	b8 01 00 00 00       	mov    $0x1,%eax
   40144d:	e9 8d 00 00 00       	jmp    4014df <main+0x137>
-  401452:	48 8b 55 f8          	mov    -0x8(%rbp),%rdx
+  401452:	48 8b 55 f8          	mov    -0x8(%rbp),%rdx # 跳转至此
   401456:	48 8d 85 f0 fe ff ff 	lea    -0x110(%rbp),%rax
   40145d:	48 89 d1             	mov    %rdx,%rcx
   401460:	ba 00 01 00 00       	mov    $0x100,%edx
@@ -356,7 +356,7 @@ Disassembly of section .text:
   401472:	48 89 45 f0          	mov    %rax,-0x10(%rbp)
   401476:	48 83 7d f0 00       	cmpq   $0x0,-0x10(%rbp)
   40147b:	75 22                	jne    40149f <main+0xf7>
-  40147d:	48 8d 05 05 0c 00 00 	lea    0xc05(%rip),%rax        # 402089 <_IO_stdin_used+0x89>
+  40147d:	48 8d 05 05 0c 00 00 	lea    0xc05(%rip),%rax        # 402089 <_IO_stdin_used+0x89> "fread"
   401484:	48 89 c7             	mov    %rax,%rdi
   401487:	e8 84 fc ff ff       	call   401110 <perror@plt>
   40148c:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
@@ -364,7 +364,7 @@ Disassembly of section .text:
   401493:	e8 38 fc ff ff       	call   4010d0 <fclose@plt>
   401498:	b8 01 00 00 00       	mov    $0x1,%eax
   40149d:	eb 40                	jmp    4014df <main+0x137>
-  40149f:	48 8d 95 f0 fe ff ff 	lea    -0x110(%rbp),%rdx
+  40149f:	48 8d 95 f0 fe ff ff 	lea    -0x110(%rbp),%rdx # 跳转至此
   4014a6:	48 8b 45 f0          	mov    -0x10(%rbp),%rax
   4014aa:	48 01 d0             	add    %rdx,%rax
   4014ad:	c6 00 00             	movb   $0x0,(%rax)
@@ -372,9 +372,9 @@ Disassembly of section .text:
   4014b4:	48 89 c7             	mov    %rax,%rdi
   4014b7:	e8 14 fc ff ff       	call   4010d0 <fclose@plt>
   4014bc:	48 8d 85 f0 fe ff ff 	lea    -0x110(%rbp),%rax
-  4014c3:	48 89 c7             	mov    %rax,%rdi
-  4014c6:	e8 8a fe ff ff       	call   401355 <func>
-  4014cb:	48 8d 05 bd 0b 00 00 	lea    0xbbd(%rip),%rax        # 40208f <_IO_stdin_used+0x8f>
+  4014c3:	48 89 c7             	mov    %rax,%rdi 
+  4014c6:	e8 8a fe ff ff       	call   401355 <func> # 入参即为输入文件的字符串地址
+  4014cb:	48 8d 05 bd 0b 00 00 	lea    0xbbd(%rip),%rax        # 40208f <_IO_stdin_used+0x8f> "You don't like it! You fail!"
   4014d2:	48 89 c7             	mov    %rax,%rdi
   4014d5:	e8 d6 fb ff ff       	call   4010b0 <puts@plt>
   4014da:	b8 00 00 00 00       	mov    $0x0,%eax
