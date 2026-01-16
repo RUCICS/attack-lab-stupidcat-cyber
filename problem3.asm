@@ -279,8 +279,8 @@ Disassembly of section .text:
   40133c:	48 8b 05 cd 21 00 00 	mov    0x21cd(%rip),%rax        # 403510 <saved_rsp> 取出栈顶指针
   401343:	48 89 45 f8          	mov    %rax,-0x8(%rbp) # 
   401347:	48 83 45 f8 10       	addq   $0x10,-0x8(%rbp) # 得到栈顶+16，即为dest起点
-  40134c:	48 8b 45 f8          	mov    -0x8(%rbp),%rax # 取出栈顶+16处的内容 8B
-  401350:	ff e0                	jmp    *%rax # 将这个8B字符串当作地址，跳过去
+  40134c:	48 8b 45 f8          	mov    -0x8(%rbp),%rax # 栈顶+16
+  401350:	ff e0                	jmp    *%rax # 跳转到 rax 寄存器中存储的地址去执行
   401352:	90                   	nop
   401353:	5d                   	pop    %rbp
   401354:	c3                   	ret

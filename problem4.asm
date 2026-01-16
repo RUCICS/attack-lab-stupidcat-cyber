@@ -258,8 +258,8 @@ Disassembly of section .text:
     1328:	64 48 8b 04 25 28 00 	mov    %fs:0x28,%rax
     132f:	00 00 
     1331:	48 89 45 f8          	mov    %rax,-0x8(%rbp)
-    1335:	31 c0                	xor    %eax,%eax
-    1337:	48 8d 05 ca 0c 00 00 	lea    0xcca(%rip),%rax        # 2008 <_IO_stdin_used+0x8>
+    1335:	31 c0                	xor    %eax,%eax 
+    1337:	48 8d 05 ca 0c 00 00 	lea    0xcca(%rip),%rax        # 2008 <_IO_stdin_used+0x8> "great!I will give you great scores"
     133e:	48 89 c7             	mov    %rax,%rdi
     1341:	e8 6a fd ff ff       	call   10b0 <puts@plt>
     1346:	90                   	nop
@@ -271,51 +271,51 @@ Disassembly of section .text:
     135b:	c9                   	leave
     135c:	c3                   	ret
 
-000000000000135d <func>:
+000000000000135d <func>: # x in edi
     135d:	f3 0f 1e fa          	endbr64
     1361:	55                   	push   %rbp
     1362:	48 89 e5             	mov    %rsp,%rbp
     1365:	48 83 ec 30          	sub    $0x30,%rsp
-    1369:	89 7d dc             	mov    %edi,-0x24(%rbp)
+    1369:	89 7d dc             	mov    %edi,-0x24(%rbp) # x in -0x24(%rbp)
     136c:	64 48 8b 04 25 28 00 	mov    %fs:0x28,%rax
     1373:	00 00 
     1375:	48 89 45 f8          	mov    %rax,-0x8(%rbp)
     1379:	31 c0                	xor    %eax,%eax
-    137b:	c7 45 f0 fe ff ff ff 	movl   $0xfffffffe,-0x10(%rbp)
-    1382:	8b 45 dc             	mov    -0x24(%rbp),%eax
-    1385:	89 45 e8             	mov    %eax,-0x18(%rbp)
-    1388:	8b 45 e8             	mov    -0x18(%rbp),%eax
-    138b:	89 45 f4             	mov    %eax,-0xc(%rbp)
-    138e:	8b 45 e8             	mov    -0x18(%rbp),%eax
-    1391:	89 c6                	mov    %eax,%esi
-    1393:	48 8d 05 91 0c 00 00 	lea    0xc91(%rip),%rax        # 202b <_IO_stdin_used+0x2b>
+    137b:	c7 45 f0 fe ff ff ff 	movl   $0xfffffffe,-0x10(%rbp) # 0xfffffffe储存在-0x10(%rbp)
+    1382:	8b 45 dc             	mov    -0x24(%rbp),%eax # 
+    1385:	89 45 e8             	mov    %eax,-0x18(%rbp) # x in -0x18(%rbp)
+    1388:	8b 45 e8             	mov    -0x18(%rbp),%eax # 
+    138b:	89 45 f4             	mov    %eax,-0xc(%rbp) # x in -0xc(%rbp)
+    138e:	8b 45 e8             	mov    -0x18(%rbp),%eax # x in eax
+    1391:	89 c6                	mov    %eax,%esi # x in esi
+    1393:	48 8d 05 91 0c 00 00 	lea    0xc91(%rip),%rax        # 202b <_IO_stdin_used+0x2b> "your money is %u\n"
     139a:	48 89 c7             	mov    %rax,%rdi
     139d:	b8 00 00 00 00       	mov    $0x0,%eax
     13a2:	e8 39 fd ff ff       	call   10e0 <printf@plt>
-    13a7:	8b 45 e8             	mov    -0x18(%rbp),%eax
-    13aa:	3b 45 f0             	cmp    -0x10(%rbp),%eax
+    13a7:	8b 45 e8             	mov    -0x18(%rbp),%eax # x in eax
+    13aa:	3b 45 f0             	cmp    -0x10(%rbp),%eax # 将x与0xfffffffe比较
     13ad:	73 11                	jae    13c0 <func+0x63>
-    13af:	48 8d 05 87 0c 00 00 	lea    0xc87(%rip),%rax        # 203d <_IO_stdin_used+0x3d>
+    13af:	48 8d 05 87 0c 00 00 	lea    0xc87(%rip),%rax        # 203d <_IO_stdin_used+0x3d> "your money is not enough!"
     13b6:	48 89 c7             	mov    %rax,%rdi
     13b9:	e8 f2 fc ff ff       	call   10b0 <puts@plt>
     13be:	eb 4a                	jmp    140a <func+0xad>
-    13c0:	c7 45 ec 00 00 00 00 	movl   $0x0,-0x14(%rbp)
+    13c0:	c7 45 ec 00 00 00 00 	movl   $0x0,-0x14(%rbp) # 0 in -0x14(%rbp) 初始化 
     13c7:	eb 08                	jmp    13d1 <func+0x74>
-    13c9:	83 6d e8 01          	subl   $0x1,-0x18(%rbp)
-    13cd:	83 45 ec 01          	addl   $0x1,-0x14(%rbp)
-    13d1:	8b 45 ec             	mov    -0x14(%rbp),%eax
-    13d4:	3b 45 f0             	cmp    -0x10(%rbp),%eax
-    13d7:	72 f0                	jb     13c9 <func+0x6c>
-    13d9:	83 7d e8 01          	cmpl   $0x1,-0x18(%rbp)
+    13c9:	83 6d e8 01          	subl   $0x1,-0x18(%rbp) # x in -0x18(%rbp)
+    13cd:	83 45 ec 01          	addl   $0x1, -0x14(%rbp) # 0 + 1
+    13d1:	8b 45 ec             	mov    -0x14(%rbp),%eax  # 0
+    13d4:	3b 45 f0             	cmp    -0x10(%rbp),%eax # 将0与0xfffffffe比较
+    13d7:	72 f0                	jb     13c9 <func+0x6c> # 如果0 below 0xfffffffe就跳转 可以视作for循环
+    13d9:	83 7d e8 01          	cmpl   $0x1,-0x18(%rbp) # x = 1
     13dd:	75 06                	jne    13e5 <func+0x88>
-    13df:	83 7d f4 ff          	cmpl   $0xffffffff,-0xc(%rbp)
+    13df:	83 7d f4 ff          	cmpl   $0xffffffff,-0xc(%rbp) # x in -0xc(%rbp)
     13e3:	74 11                	je     13f6 <func+0x99>
-    13e5:	48 8d 05 6b 0c 00 00 	lea    0xc6b(%rip),%rax        # 2057 <_IO_stdin_used+0x57>
+    13e5:	48 8d 05 6b 0c 00 00 	lea    0xc6b(%rip),%rax        # 2057 <_IO_stdin_used+0x57> "No! I will let you fail!"
     13ec:	48 89 c7             	mov    %rax,%rdi
     13ef:	e8 bc fc ff ff       	call   10b0 <puts@plt>
     13f4:	eb 14                	jmp    140a <func+0xad>
     13f6:	b8 00 00 00 00       	mov    $0x0,%eax
-    13fb:	e8 1c ff ff ff       	call   131c <func1>
+    13fb:	e8 1c ff ff ff       	call   131c <func1> # 输出通关信息
     1400:	bf 00 00 00 00       	mov    $0x0,%edi
     1405:	e8 f6 fc ff ff       	call   1100 <exit@plt>
     140a:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
@@ -343,18 +343,18 @@ Disassembly of section .text:
     145b:	3d 14 f4 
     145e:	48 8d 05 0b 0c 00 00 	lea    0xc0b(%rip),%rax        # 2070 <_IO_stdin_used+0x70>
     1465:	48 89 c7             	mov    %rax,%rdi
-    1468:	e8 43 fc ff ff       	call   10b0 <puts@plt>
+    1468:	e8 43 fc ff ff       	call   10b0 <puts@plt> # hi please tell me what is your name?
     146d:	48 8d 45 80          	lea    -0x80(%rbp),%rax
     1471:	48 89 c6             	mov    %rax,%rsi
-    1474:	48 8d 05 1a 0c 00 00 	lea    0xc1a(%rip),%rax        # 2095 <_IO_stdin_used+0x95>
+    1474:	48 8d 05 1a 0c 00 00 	lea    0xc1a(%rip),%rax        # 2095 <_IO_stdin_used+0x95> "%s"
     147b:	48 89 c7             	mov    %rax,%rdi
     147e:	b8 00 00 00 00       	mov    $0x0,%eax
     1483:	e8 68 fc ff ff       	call   10f0 <__isoc99_scanf@plt>
-    1488:	48 b8 70 61 6b 61 67 	movabs $0x77757867616b6170,%rax
-    148f:	78 75 77 
+    1488:	48 b8 70 61 6b 61 67 	movabs $0x77757867616b6170,%rax  # "wuxgakap"
+    148f:	78 75 77
     1492:	48 89 85 73 ff ff ff 	mov    %rax,-0x8d(%rbp)
-    1499:	48 b8 78 75 77 71 75 	movabs $0x656f7571777578,%rax
-    14a0:	6f 65 00 
+    1499:	48 b8 78 75 77 71 75 	movabs $0x656f7571777578,%rax  # "xuwquoe"
+    14a0:	6f 65 00
     14a3:	48 89 85 78 ff ff ff 	mov    %rax,-0x88(%rbp)
     14aa:	48 8d 85 73 ff ff ff 	lea    -0x8d(%rbp),%rax
     14b1:	be 0c 00 00 00       	mov    $0xc,%esi
@@ -362,29 +362,29 @@ Disassembly of section .text:
     14b9:	e8 4b fd ff ff       	call   1209 <caesar_decrypt>
     14be:	48 8d 05 d3 0b 00 00 	lea    0xbd3(%rip),%rax        # 2098 <_IO_stdin_used+0x98>
     14c5:	48 89 c7             	mov    %rax,%rdi
-    14c8:	e8 e3 fb ff ff       	call   10b0 <puts@plt>
+    14c8:	e8 e3 fb ff ff       	call   10b0 <puts@plt> # hi! do you like ics?
     14cd:	48 8d 45 a0          	lea    -0x60(%rbp),%rax
     14d1:	48 89 c6             	mov    %rax,%rsi
-    14d4:	48 8d 05 ba 0b 00 00 	lea    0xbba(%rip),%rax        # 2095 <_IO_stdin_used+0x95>
+    14d4:	48 8d 05 ba 0b 00 00 	lea    0xbba(%rip),%rax        # 2095 <_IO_stdin_used+0x95> "%s"
     14db:	48 89 c7             	mov    %rax,%rdi
     14de:	b8 00 00 00 00       	mov    $0x0,%eax
     14e3:	e8 08 fc ff ff       	call   10f0 <__isoc99_scanf@plt>
-    14e8:	48 b8 75 72 6b 61 67 	movabs $0x68757367616b7275,%rax
-    14ef:	73 75 68 
-    14f2:	48 ba 71 79 71 6b 67 	movabs $0x657a6d676b717971,%rdx
-    14f9:	6d 7a 65 
+    14e8:	48 b8 75 72 6b 61 67 	movabs $0x68757367616b7275,%rax  # "hushgakru"
+    14ef:	73 75 68
+    14f2:	48 ba 71 79 71 6b 67 	movabs $0x657a6d676b717971,%rdx  # "qykqmze"
+    14f9:	6d 7a 65
     14fc:	48 89 45 c0          	mov    %rax,-0x40(%rbp)
     1500:	48 89 55 c8          	mov    %rdx,-0x38(%rbp)
-    1504:	48 b8 74 75 75 69 75 	movabs $0x7378787569757574,%rax
-    150b:	78 78 73 
-    150e:	48 ba 75 68 71 6b 61 	movabs $0x617367616b716875,%rdx
-    1515:	67 73 61 
+    1504:	48 b8 74 75 75 69 75 	movabs $0x7378787569757574,%rax  # "sxxuiuut"
+    150b:	78 78 73
+    150e:	48 ba 75 68 71 6b 61 	movabs $0x617367616b716875,%rdx  # "asgakqhu"
+    1515:	67 73 61
     1518:	48 89 45 d0          	mov    %rax,-0x30(%rbp)
     151c:	48 89 55 d8          	mov    %rdx,-0x28(%rbp)
-    1520:	48 b8 68 71 6b 61 67 	movabs $0x61617367616b7168,%rax
-    1527:	73 61 61 
-    152a:	48 ba 70 65 6f 61 64 	movabs $0x657164616f6570,%rdx
-    1531:	71 65 00 
+    1520:	48 b8 68 71 6b 61 67 	movabs $0x61617367616b7168,%rax  # "aasgakqh"
+    1527:	73 61 61
+    152a:	48 ba 70 65 6f 61 64 	movabs $0x657164616f6570,%rdx  # "peqdoape"
+    1531:	71 65 00
     1534:	48 89 45 d9          	mov    %rax,-0x27(%rbp)
     1538:	48 89 55 e1          	mov    %rdx,-0x1f(%rbp)
     153c:	48 8d 45 c0          	lea    -0x40(%rbp),%rax
@@ -393,12 +393,12 @@ Disassembly of section .text:
     1548:	e8 bc fc ff ff       	call   1209 <caesar_decrypt>
     154d:	48 8d 05 5c 0b 00 00 	lea    0xb5c(%rip),%rax        # 20b0 <_IO_stdin_used+0xb0>
     1554:	48 89 c7             	mov    %rax,%rdi
-    1557:	e8 54 fb ff ff       	call   10b0 <puts@plt>
+    1557:	e8 54 fb ff ff       	call   10b0 <puts@plt> # if you give me enough yuanshi,I will let you pass!
     155c:	c7 85 60 ff ff ff 00 	movl   $0x0,-0xa0(%rbp)
     1563:	00 00 00 
     1566:	48 8d 85 60 ff ff ff 	lea    -0xa0(%rbp),%rax
     156d:	48 89 c6             	mov    %rax,%rsi
-    1570:	48 8d 05 6c 0b 00 00 	lea    0xb6c(%rip),%rax        # 20e3 <_IO_stdin_used+0xe3>
+    1570:	48 8d 05 6c 0b 00 00 	lea    0xb6c(%rip),%rax        # 20e3 <_IO_stdin_used+0xe3> "%d"
     1577:	48 89 c7             	mov    %rax,%rdi
     157a:	b8 00 00 00 00       	mov    $0x0,%eax
     157f:	e8 6c fb ff ff       	call   10f0 <__isoc99_scanf@plt>
